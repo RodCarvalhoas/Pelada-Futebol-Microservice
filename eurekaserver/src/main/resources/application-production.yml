@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: eurekaserver
+  security:
+    basic:
+      enabled: true #autenticação basica do Spring Security
+    user:
+      name: mseureka-user
+      password: mea-sueresurk
+
+
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false

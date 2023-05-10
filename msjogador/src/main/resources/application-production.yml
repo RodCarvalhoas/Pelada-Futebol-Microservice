@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: msjogador
+
+server:
+  port: 0
+
+  error:
+   include-stacktrace: on_param
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://mseureka-user:mea-sueresurk@ms-eureka:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+

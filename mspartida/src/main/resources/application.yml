@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: mspartida
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+server:
+  port: 0
+
+
+  error:
+    include-stacktrace: on_param
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://mseureka-user:mea-sueresurk@localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+
