@@ -1,16 +1,13 @@
 package io.github.rodcarvalhoas.msusuario.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.github.rodcarvalhoas.msusuario.dto.UsuarioDTO;
+import io.github.rodcarvalhoas.msusuario.exceptions.ResourceNotFoundException;
 import io.github.rodcarvalhoas.msusuario.model.Usuario;
 import io.github.rodcarvalhoas.msusuario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,24 +18,29 @@ public class UsuarioService {
 
     public Optional<Usuario> getUsuarioByCPF(String cpf){
         Optional<Usuario> usuarioOptional = usuarioRepository.findBycpf(cpf);
-        if(usuarioOptional.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
-        }
+        usuarioOptional.orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         return usuarioOptional;
     }
 
-    public void saveUsuario(Usuario usuario){
+    public void saveUsuario(Usuario usuario) {
+
         Optional<Usuario> usuarioOptional = usuarioRepository.findBycpf(usuario.getCpf());
-        if(usuarioOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT ,"Usuário com cpf já cadastrado");
+        if (usuarioOptional.isPresent()) {
+            throw new ResourceNotFoundException("Usuário com cpf já cadastrado");
         }
+
+        Optional<Usuario> usuarioPorEmail = usuarioRepository.findByemail(usuario.getEmail());
+        if (usuarioPorEmail.isPresent()) {
+            throw new ResourceNotFoundException("Email já está em uso");
+        }
+
         usuarioRepository.save(usuario);
     }
 
     public void deleteUsuario(String cpf){
         Optional<Usuario> usuarioOptional = usuarioRepository.findBycpf(cpf);
         if(usuarioOptional.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
+            throw new ResourceNotFoundException("Usuário não encontrado");
         }
         usuarioRepository.delete(usuarioOptional.get());
     }

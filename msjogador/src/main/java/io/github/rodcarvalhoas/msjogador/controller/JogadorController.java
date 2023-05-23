@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class JogadorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long criarJogador(@RequestBody JogadorDTO jogadorDTO){
+    public Long criarJogador(@RequestBody @Valid JogadorDTO jogadorDTO){
         Jogador jogador = jogadorDTO.toModel(jogadorDTO);
         jogadorService.criarJogador(jogador);
         return jogador.getId();

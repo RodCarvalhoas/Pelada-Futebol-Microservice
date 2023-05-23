@@ -1,19 +1,17 @@
 package io.github.rodcarvalhoas.mspartida.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.github.rodcarvalhoas.mspartida.dto.PartidaDto;
 import io.github.rodcarvalhoas.mspartida.dto.PartidaSorteadaResponse;
-import io.github.rodcarvalhoas.mspartida.exception.JogadorPartidaNotFoundException;
+import io.github.rodcarvalhoas.mspartida.exception.ResourceNotFoundException;
 import io.github.rodcarvalhoas.mspartida.model.Partida;
-import io.github.rodcarvalhoas.mspartida.model.UsuarioPartidaAdm;
 import io.github.rodcarvalhoas.mspartida.service.PartidaService;
 import io.github.rodcarvalhoas.mspartida.service.SorteadorDeTimesService;
 import io.github.rodcarvalhoas.mspartida.service.UsuarioPartidaAdmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 
 @RestController
@@ -28,7 +26,7 @@ public class PartidaController implements Serializable {
     @PostMapping(value = "/criar-partida", params = {"cpf", "idCampoPartida"})
     @ResponseStatus(HttpStatus.CREATED)
     public Long criarPartida(@RequestParam String cpf, Long idCampoPartida,
-                                @Validated @RequestBody PartidaDto partidaDto){
+                                @Valid @RequestBody PartidaDto partidaDto){
 
 
         Long partidaId = partidaService.criarPartida(cpf,idCampoPartida, partidaDto);
@@ -44,7 +42,7 @@ public class PartidaController implements Serializable {
 
    @PostMapping(value = "/jogadores-partida", params = {"idPartida", "idPartidaJogador"})
    @ResponseStatus(HttpStatus.OK)
-    public void inserirJogadorPartida(@RequestParam Long idPartida, Long idPartidaJogador) throws JsonProcessingException, JogadorPartidaNotFoundException {
+    public void inserirJogadorPartida(@RequestParam Long idPartida, Long idPartidaJogador) throws ResourceNotFoundException {
         partidaService.inserirJogadorPartida(idPartida, idPartidaJogador);
    }
 

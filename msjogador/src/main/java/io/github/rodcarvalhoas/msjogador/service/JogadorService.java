@@ -1,5 +1,6 @@
 package io.github.rodcarvalhoas.msjogador.service;
 
+import io.github.rodcarvalhoas.msjogador.exceptions.ResourceNotFoundException;
 import io.github.rodcarvalhoas.msjogador.model.Jogador;
 import io.github.rodcarvalhoas.msjogador.repository.JogadorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,10 @@ public class JogadorService {
     }
 
     public Optional<Jogador> findById(Long id){
+        Optional<Jogador> jogadorOptional = jogadorRepository.findById(id);
+        if(jogadorOptional.isEmpty()){
+            throw new ResourceNotFoundException("Jogador não encontrado");
+        }
         return jogadorRepository.findById(id);
     }
 

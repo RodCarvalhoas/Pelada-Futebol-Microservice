@@ -1,6 +1,7 @@
 package io.github.rodcarvalhoas.mspartida.service;
 
 import io.github.rodcarvalhoas.mspartida.dto.PartidaSorteadaResponse;
+import io.github.rodcarvalhoas.mspartida.exception.ResourceNotFoundException;
 import io.github.rodcarvalhoas.mspartida.model.JogadoresPartida;
 import io.github.rodcarvalhoas.mspartida.model.Partida;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class SorteadorDeTimesService {
             partidaSorteadaResponse.setTimeB(timeB);
 
         }else{
-            throw new RuntimeException("Quantidade de jogadores insuficientes para o sorteamento dos times.");
+            throw new ResourceNotFoundException("Quantidade de jogadores insuficientes para o sorteamento dos times.");
         }
         return  partidaSorteadaResponse;
     }

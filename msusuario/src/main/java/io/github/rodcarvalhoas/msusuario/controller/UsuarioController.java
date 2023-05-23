@@ -1,13 +1,12 @@
 package io.github.rodcarvalhoas.msusuario.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.rodcarvalhoas.msusuario.dto.UsuarioDTO;
 import io.github.rodcarvalhoas.msusuario.model.Usuario;
 import io.github.rodcarvalhoas.msusuario.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -17,6 +16,7 @@ import java.util.Optional;
 public class UsuarioController implements Serializable {
 
     private final UsuarioService usuarioService;
+    
 
     @GetMapping(params = "cpf")
     @ResponseStatus(HttpStatus.OK)
@@ -27,10 +27,10 @@ public class UsuarioController implements Serializable {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario criarUsuario(@RequestBody UsuarioDTO usuarioDTO){
-        Usuario usuario = usuarioDTO.toModel();
-        usuarioService.saveUsuario(usuario);
-        return usuario;
+    public Usuario criarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
+            Usuario usuario = usuarioDTO.toModel();
+            usuarioService.saveUsuario(usuario);
+            return usuario;
     }
 
     @DeleteMapping(params = "cpf")

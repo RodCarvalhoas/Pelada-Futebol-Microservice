@@ -2,9 +2,7 @@ package io.github.rodcarvalhoas.mspartida.service;
 
 import io.github.rodcarvalhoas.mspartida.dto.JogadoresPartidaDto;
 import io.github.rodcarvalhoas.mspartida.dto.PartidaDto;
-import io.github.rodcarvalhoas.mspartida.exception.JogadorPartidaNotFoundException;
-import io.github.rodcarvalhoas.mspartida.exception.PartidaCriacaoException;
-import io.github.rodcarvalhoas.mspartida.exception.PartidaNotFoundException;
+import io.github.rodcarvalhoas.mspartida.exception.ResourceNotFoundException;
 import io.github.rodcarvalhoas.mspartida.model.*;
 import io.github.rodcarvalhoas.mspartida.repository.CampoPartidaRepository;
 import io.github.rodcarvalhoas.mspartida.clients.JogadoresPartidaDtoClient;
@@ -47,26 +45,26 @@ public class PartidaService {
             partidaRepository.save(partida);
             return partida.getId();
 
-        }catch (PartidaCriacaoException e){
-            throw new PartidaCriacaoException("Erro ao criar a partida: " + e.getMessage());
+        }catch (ResourceNotFoundException e){
+            throw new ResourceNotFoundException("Erro ao criar a partida");
         }
     }
 
     public Partida verPartida(Long id){
             Optional<Partida> partida = partidaRepository.findById(id);
-            return partida.orElseThrow(() -> new PartidaNotFoundException("Partida não encontrada!"));
+            return partida.orElseThrow(() -> new ResourceNotFoundException("Partida não encontrada!"));
     }
 
     @Transactional
-    public void inserirJogadorPartida(Long idPartida, Long idJogador) throws JogadorPartidaNotFoundException {
+    public void inserirJogadorPartida(Long idPartida, Long idJogador) throws ResourceNotFoundException {
         Optional<Partida> partida = partidaRepository.findById(idPartida);
         if(partida.isEmpty()){
-            throw new PartidaNotFoundException("Partida não encontrada!");
+            throw new ResourceNotFoundException("Partida não encontrada!");
         }
 
         JogadoresPartidaDto jogadoresPartidaDto = jogadoresPartidaDtoClient.findById(idJogador);
         if(jogadoresPartidaDto == null){
-            throw new JogadorPartidaNotFoundException("Jogador não encontrado!");
+            throw new ResourceNotFoundException("Jogador não encontrado!");
         }
         JogadoresPartida jogadoresPartida = jogadoresPartidaDto.toModel(jogadoresPartidaDto);
         jogadoresPartida.setPartida(partida.get());
